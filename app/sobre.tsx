@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
+import { router } from 'expo-router';
 
 export default function Sobre() {
   return (
@@ -43,6 +44,14 @@ export default function Sobre() {
         <Text>Nome: Victoria Cristina Silva Gomes das Neves</Text>
         <Text>Matrícula: 25109316</Text>
       </View>
+
+      <View style={styles.card}>
+        <Button
+        title="Tela Inicial"
+        onPress={() => router.push('/')}
+      />
+      </View>
+
     </ScrollView>
   );
 }
