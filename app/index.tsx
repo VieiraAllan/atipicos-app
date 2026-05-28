@@ -23,7 +23,12 @@ export default function TelaInicial() {
         title="Sobre o Projeto"
         onPress={() => router.push('/sobre')}
       />
-    </View>
+
+      <Button
+              title="Tela Inicial do terapeuta"
+              onPress={() => router.push('/TherapistHomeScreen')}
+      />
+      </View>
   );
 }
 
