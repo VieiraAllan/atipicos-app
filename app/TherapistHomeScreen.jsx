@@ -1,14 +1,13 @@
-import React from "react";
+import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import {
   SafeAreaView,
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
   ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { Ionicons, MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
-import { router } from 'expo-router';
 
 const patients = [
   {
@@ -37,9 +36,9 @@ const patients = [
   },
 ];
 
-export default function TherapistHomeScreen({ navigation }) {
+export default function TherapistHomeScreen() {
   const handleBack = () => {
-    if (navigation?.goBack) navigation.goBack();
+    router.back();
   };
 
   const handleNotifications = () => {
@@ -47,11 +46,11 @@ export default function TherapistHomeScreen({ navigation }) {
   };
 
   const handleHome = () => {
-    console.log("Home");
+    console.log("Home do terapeuta");
   };
 
-  const handleReports = () => {
-    console.log("Relatórios");
+  const handleAlerts = () => {
+    console.log("Alertas");
   };
 
   const handleSettings = () => {
@@ -64,15 +63,22 @@ export default function TherapistHomeScreen({ navigation }) {
         {/* Topo */}
         <View style={styles.topRow}>
           <TouchableOpacity onPress={handleBack} style={styles.iconButton}>
-            <MaterialIcons name="logout" size={30} color="#F0C9A6" />
+            <MaterialIcons
+              name="arrow-back-ios-new"
+              size={26}
+              color="#F0C9A6"
+            />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleNotifications} style={styles.iconButton}>
+          <TouchableOpacity
+            onPress={handleNotifications}
+            style={styles.iconButton}
+          >
             <Ionicons name="notifications" size={30} color="#D9A441" />
           </TouchableOpacity>
         </View>
 
-        {/* Saudação / Espaço para nome */}
+        {/* Saudação */}
         <View style={styles.greetingBox}>
           <Text style={styles.greetingText}>Olá, terapeuta</Text>
         </View>
@@ -80,7 +86,7 @@ export default function TherapistHomeScreen({ navigation }) {
         {/* Título */}
         <Text style={styles.sectionTitle}>Pacientes Ativos</Text>
 
-        {/* Lista de cards */}
+        {/* Lista */}
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
@@ -96,14 +102,18 @@ export default function TherapistHomeScreen({ navigation }) {
               <View style={styles.infoColumn}>
                 <Text style={styles.patientName}>{patient.name}</Text>
                 <Text style={styles.infoText}>Idade: {patient.age}</Text>
-                <Text style={styles.infoText}>Diagnóstico: {patient.diagnosis}</Text>
+                <Text style={styles.infoText}>
+                  Diagnóstico: {patient.diagnosis}
+                </Text>
 
                 <View style={styles.divider} />
 
                 <Text style={styles.label}>Última emoção</Text>
                 <Text style={styles.value}>{patient.lastEmotion}</Text>
 
-                <Text style={[styles.label, { marginTop: 10 }]}>Último SOS</Text>
+                <Text style={[styles.label, { marginTop: 10 }]}>
+                  Último SOS
+                </Text>
                 <Text style={styles.value}>{patient.lastSOS}</Text>
               </View>
             </View>
@@ -116,8 +126,8 @@ export default function TherapistHomeScreen({ navigation }) {
             <Ionicons name="home" size={30} color="#FF5A5F" />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.navItem} onPress={handleReports}>
-            <Ionicons name="pie-chart" size={30} color="#47C9E5" />
+          <TouchableOpacity style={styles.navItem} onPress={handleAlerts}>
+            <Ionicons name="warning" size={30} color="#47C9E5" />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.navItem} onPress={handleSettings}>
