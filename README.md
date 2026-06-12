@@ -1,138 +1,87 @@
-# 📱 Atípicos – Aplicativo de Apoio ao Desenvolvimento Infantil
+# Atípicos — App (React Native + Expo + TypeScript)
 
-## 📌 Sobre o Projeto
-
-O **Atípicos** é um aplicativo mobile desenvolvido com o objetivo de auxiliar pais, responsáveis e terapeutas no acompanhamento do desenvolvimento de crianças com Transtorno do Espectro Autista (TEA).
-
-O aplicativo oferece ferramentas para organização de rotina, comunicação alternativa por imagens e acompanhamento de progresso, além de conteúdos informativos relevantes.
-
----
-
-## 🎯 Objetivo
-
-Facilitar o dia a dia de famílias e profissionais, proporcionando uma solução acessível e intuitiva para:
-
-* Organização de rotinas
-* Comunicação para crianças não verbais
-* Acompanhamento do desenvolvimento
-* Apoio educacional e terapêutico
+Fluxo de **autenticação e cadastro** do app Atípicos, fiel ao protótipo do Figma.
+Esta é a entrega da **Fase 2** (telas + navegação). O backend (Firebase) entra na
+**Fase 3** — as telas já chamam `src/services/auth.ts`, hoje um *stub*, que será
+implementado com Firebase sem precisar alterar as telas.
 
 ---
 
-## 🚀 Funcionalidades
-
-### 👤 Área dos Responsáveis
-
-* Cadastro e login
-* Cadastro de crianças
-* Gerenciamento de rotina
-* Visualização de relatórios (premium)
-* Controle de atividades
-
-### 🧒 Área Kids
-
-* Rotina visual
-* Comunicação por imagens (PECS)
-* Atividades educativas
-* Exercícios de fala
-
----
-
-## 🌐 APIs Utilizadas
-
-### 📰 NewsAPI 
-
-* Exibição de conteúdos em formato de feed
-* Suporte a paginação
-* Informações atualizadas (notícias e conteúdos relevantes)
-
-🔗 https://newsapi.org/
-
----
-
-### 🗺️ OpenStreetMap 
-
-* Funcionalidade de geolocalização
-* Base para rastreamento da criança (em futuras versões)
-
-🔗 https://www.openstreetmap.org/
-
----
-
-## 🛠️ Tecnologias Utilizadas
-
-### Frontend
-
-* React Native
-
-### Backend (em desenvolvimento)
-
-* Node.js
-* Express
-
-### Banco de Dados
-
-* MongoDB
-
-### Ferramentas
-
-* Figma (design e prototipação)
-* GitHub (versionamento)
-
----
-
-## 📱 Status do Projeto
-
-🚧 Em desenvolvimento (MVP)
-
-Atualmente o projeto encontra-se na fase inicial, com:
-
-* Estrutura do aplicativo definida
-* Protótipos desenvolvidos
-* Primeiras telas implementadas
-
----
-
-## 👥 Equipe
-
-* Állan Ribeiro Vieira - 25107225
-* Gabriel Borges dos Santos Cassimiro - 24201877
-* Lucas Concentino - 24201597
-* Lucas da Silva de Maria - 24202179
-* Mayara Frazão Jeremias - 18202710
-* Victoria Cristina Silva - 25109316
-
-
----
-
-## 📚 Informações Acadêmicas
-
-* Curso: Análise e Desenvolvimento de Sistemas
-* Instituição: UNISUAM
-* Professor: Vinicius Pinto da Silva
-
----
-
-## 📦 Como Executar o Projeto
+## Como rodar
 
 ```bash
-# Clonar o repositório
-git clone https://github.com/seu-repositorio
-
-# Acessar a pasta
-cd atipicos
-
-# Instalar dependências
+cd rn-atipicos
 npm install
-
-# Rodar o projeto
+# garante as versões nativas certas do SDK do Expo:
+npx expo install --fix
 npx expo start
 ```
 
+Abra no **Expo Go** (celular) lendo o QR Code, ou tecle `a` (Android) / `i` (iOS) /
+`w` (web) no terminal.
+
+> Requer Node 18+ e o app **Expo Go** no celular. Não precisa de Android Studio/Xcode
+> para testar no Expo Go.
+
 ---
 
-## 💡 Considerações Finais
+## Estrutura
 
-O projeto Atípicos busca unir tecnologia e inclusão, oferecendo uma ferramenta acessível que contribua para o desenvolvimento e qualidade de vida de crianças com TEA e suas famílias.
+```
+rn-atipicos/
+├─ App.tsx                      # carrega fontes + NavigationContainer
+├─ app.json                     # config Expo (nome, ícone, splash)
+├─ assets/
+│   └─ logo-atipicos.png
+└─ src/
+   ├─ theme/                    # colors.ts, typography.ts (tokens do protótipo)
+   ├─ navigation/
+   │   ├─ types.ts              # RootStackParamList (navegação tipada)
+   │   └─ RootNavigator.tsx     # pilha de telas (native-stack)
+   ├─ components/               # Logo, BackButton, PrimaryButton, Field,
+   │                            # SelectField, ScreenContainer, FormScreen
+   ├─ constants/formData.ts     # configuração dos campos de cada formulário
+   ├─ utils/masks.ts            # máscaras de CPF / CEP / data
+   ├─ services/
+   │   ├─ firebase.ts           # init do Firebase (Auth + Firestore + Storage)
+   │   ├─ auth.ts               # login, cadastro, recuperação de senha
+   │   ├─ criancas.ts           # CRUD de crianças (RF04/05/06)
+   │   └─ storage.ts            # upload de foto (RF18)
+   └─ screens/
+       ├─ SplashScreen.tsx
+       ├─ InicialScreen.tsx
+       ├─ CadastroEscolhaScreen.tsx
+       ├─ LoginScreen.tsx           # reutilizada p/ Atípico/Responsável/Terapeuta
+       ├─ CadastroAdultoScreen.tsx  # Responsável e Terapeuta
+       ├─ CadastroCriancaScreen.tsx
+       ├─ RecuperacaoSenhaScreen.tsx
+       ├─ SucessoScreen.tsx
+       └─ AreaStubScreen.tsx        # placeholder pós-login (Fase 4)
+```
 
----
+## Fluxo de navegação
+
+```
+Splash → Inicial
+Inicial → Login {perfil}                         (Atípico | Responsável | Terapeuta)
+Inicial → CadastroEscolha → CadastroAdulto {perfil} → Sucesso → Inicial
+Login → RecuperacaoSenha → Sucesso → Inicial
+Login → Area {perfil}                            (placeholder)
+Area(responsavel) → CadastroCrianca → Sucesso
+```
+
+## Requisitos cobertos
+
+- **RF01** Cadastro de responsáveis e terapeutas (`CadastroAdultoScreen`)
+- **RF02** Login (`LoginScreen`) · **RF03** Recuperação de senha (`RecuperacaoSenhaScreen`)
+- **RF04/RF05** Cadastro da criança com diagnóstico e observações (`CadastroCriancaScreen`)
+- **RNF01/RNF02** Interface intuitiva, cores suaves, botões grandes, alvos de toque ≥ 44px
+
+## Notas
+
+- Path alias `@/*` resolvido nativamente pelo Expo via `tsconfig.json`.
+- Fontes via `@expo-google-fonts` (Quicksand, Inter, Happy Monkey).
+- Dropdowns implementados com `Modal` nativo (sem dependências extras).
+- **Backend (Fase 3):** configuração e regras em **`FIREBASE.md`**. Crie o `.env`
+  a partir do `.env.example` antes de rodar com Firebase real.
+- Próximo passo (Fase 4): áreas internas Pais/Kids/Terapeuta + APIs externas.
