@@ -1,0 +1,36 @@
+rules_version = '2';
+
+// Regras de segurança do Firestore — Atípicos (RNF07, RNF08).
+// Princípio: cada usuário só acessa o próprio perfil; cada responsável só
+// acessa as crianças que ele cadastrou.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function autenticado() {
+      return request.auth != null;
+    }
+
+    // Perfis de usuário (responsável / terapeuta / atípico)
+    match /usuarios/{uid} {
+      allow read: if autenticado() && request.auth.uid == uid;
+      allow create: if autenticado() && request.auth.uid == uid;
+      allow update, delete: if autenticado() && request.auth.uid == uid;
+    }
+
+    // Crianças — pertencem ao responsável que as cadastrou
+    match /criancas/{criancaId} {
+      allow read, update, delete:
+        if autenticado() && resource.data.responsavelUid == request.auth.uid;
+      allow create:
+        if autenticado() && request.resource.data.responsavelUid == request.auth.uid;
+
+      // (Fase futura) Relatórios criados por terapeutas autorizados — RF20/RF21.
+      // match /relatorios/{relatorioId} { ... }
+    }
+
+    // Bloqueia qualquer outro caminho por padrão.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
