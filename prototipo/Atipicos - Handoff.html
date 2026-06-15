@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Atípicos — Handoff</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  :root {
+    --ink: #151426; --cream: #fdfbf7; --brown: #6d1d00;
+    --muted: #6d6c6c; --line: #e4ddd0; --green: #1f8a5b; --amber: #c98a00;
+  }
+  html, body { margin: 0; }
+  body { background: #d9d3c8; font-family: "Inter", sans-serif; color: var(--ink); padding: 32px 16px; }
+
+  .page {
+    width: 820px; max-width: 100%; margin: 0 auto 28px; background: #fff;
+    padding: 64px 70px; box-shadow: 0 14px 40px -18px rgba(20,16,30,.4);
+  }
+
+  .eyebrow { font-family: "Inter", sans-serif; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--brown); margin: 0 0 10px; }
+  h1 { font-family: "Quicksand", sans-serif; font-weight: 700; font-size: 40px; line-height: 1.05; margin: 0 0 14px; }
+  h2 { font-family: "Quicksand", sans-serif; font-weight: 700; font-size: 23px; margin: 40px 0 14px; padding-bottom: 9px; border-bottom: 2px solid var(--ink); }
+  h3 { font-family: "Quicksand", sans-serif; font-weight: 700; font-size: 16px; margin: 22px 0 8px; }
+  p { font-size: 14.5px; line-height: 1.62; color: #2c2b30; margin: 0 0 12px; }
+  .lead { font-size: 16px; color: var(--muted); max-width: 60ch; }
+  strong { font-weight: 600; }
+  code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px; background: #f3efe7; padding: 1px 6px; border-radius: 5px; color: var(--brown); }
+
+  .meta { display: flex; gap: 30px; flex-wrap: wrap; margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--line); }
+  .meta div { font-size: 13px; }
+  .meta .k { color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; font-size: 11px; margin-bottom: 3px; }
+
+  /* Resposta às 2 perguntas */
+  .qa { border: 2px solid var(--ink); border-radius: 14px; padding: 22px 24px; margin: 16px 0; }
+  .qa .q { font-family: "Quicksand", sans-serif; font-weight: 700; font-size: 16px; margin: 0 0 8px; }
+  .qa .verdict { display: inline-block; font-weight: 700; font-size: 12px; color: #fff; background: var(--green); padding: 3px 11px; border-radius: 20px; margin-bottom: 10px; }
+
+  /* Fases */
+  .phase { display: flex; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .phase:last-child { border-bottom: none; }
+  .phase .n { flex: 0 0 34px; height: 34px; border-radius: 50%; background: var(--ink); color: var(--cream); font-family: "Quicksand", sans-serif; font-weight: 700; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+  .phase .c { flex: 1; }
+  .phase .t { font-family: "Quicksand", sans-serif; font-weight: 700; font-size: 15.5px; margin: 4px 0 3px; }
+  .phase .d { font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+  .tag { font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 20px; white-space: nowrap; }
+  .tag.ok { background: #e3f5ec; color: var(--green); }
+
+  /* Branches */
+  .branches { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 16px 0; }
+  .branch { border: 2px solid var(--ink); border-radius: 14px; overflow: hidden; }
+  .branch .h { background: var(--ink); color: var(--cream); padding: 11px 16px; font-family: ui-monospace, monospace; font-size: 13px; font-weight: 600; }
+  .branch .b { padding: 14px 16px; font-size: 13px; line-height: 1.55; color: #2c2b30; }
+  .branch .b ul { margin: 6px 0 0; padding-left: 18px; }
+  .branch .b li { margin-bottom: 4px; }
+
+  /* Tabela requisitos */
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  th { font-family: "Quicksand", sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  td code { font-size: 11.5px; }
+  .st { font-weight: 700; font-size: 11px; padding: 2px 8px; border-radius: 20px; }
+  .st.full { background: #e3f5ec; color: var(--green); }
+  .st.part { background: #fbf0d8; color: var(--amber); }
+
+  .note { background: #f3efe7; border-left: 4px solid var(--brown); border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 16px 0; font-size: 13.5px; line-height: 1.6; }
+  .note b { font-family: "Quicksand", sans-serif; }
+
+  ol.steps { padding-left: 20px; font-size: 14px; line-height: 1.7; }
+  ol.steps code { font-size: 12px; }
+
+  .foot { margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .page { box-shadow: none; margin: 0; padding: 48px 54px; width: 100%; page-break-after: always; }
+    .page:last-child { page-break-after: auto; }
+  }
+  @media (max-width: 700px) {
+    .page { padding: 40px 26px; }
+    .branches { grid-template-columns: 1fr; }
+    h1 { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- PÁGINA 1 -->
+  <section class="page">
+    <p class="eyebrow">Documento de Handoff · Projeto Universitário</p>
+    <h1>Atípicos — App de apoio a pais de crianças autistas</h1>
+    <p class="lead">Resumo da entrega técnica: backend Firebase, telas iniciais e de cadastro em React Native, protótipo navegável do app completo e o plano de organização em duas branches.</p>
+
+    <div class="meta">
+      <div><div class="k">Stack</div>React Native · Expo · TypeScript</div>
+      <div><div class="k">Backend</div>Firebase (Auth · Firestore · Storage)</div>
+      <div><div class="k">Sua função</div>Backend + telas iniciais e de cadastro</div>
+      <div><div class="k">Base de design</div>Protótipo Figma (alta fidelidade)</div>
+    </div>
+
+    <h2>Suas duas perguntas — respondidas</h2>
+
+    <div class="qa">
+      <p class="q">1. Dá para transformar o protótipo num app React Native com navegação fiel?</p>
+      <span class="verdict">SIM — feito</span>
+      <p style="margin:0">O fluxo de autenticação e cadastro foi recriado em React Native (Expo + TypeScript) com navegação tipada (React Navigation), fiel ao protótipo: mesmas cores, tipografia (Quicksand/Inter/Happy Monkey), campos com ícone, máscaras de CPF/CEP/data e botões de contorno. O app completo (Kids, Responsável, Terapeuta) está demonstrado no protótipo navegável que serve de referência viva para a equipe.</p>
+    </div>
+
+    <div class="qa">
+      <p class="q">2. Dá para configurar o backend e organizar em duas branches?</p>
+      <span class="verdict">SIM — feito</span>
+      <p style="margin:0">O backend Firebase está implementado em camada de serviços (auth, perfis, crianças, upload) com regras de segurança prontas. A organização em <code>feature/auth-cadastro</code> (sua parte) e <code>plano-b-completo</code> (app inteiro como salvação) está descrita com os comandos de Git exatos em <code>rn-atipicos/GIT.md</code>.</p>
+    </div>
+
+    <div class="note">
+      <b>Onde eu paro e você assume.</b> Escrevi todo o código e a documentação. O que roda
+      na sua máquina: criar o projeto no console do Firebase e colar as chaves no <code>.env</code>,
+      <code>npm install</code> / <code>npx expo start</code>, e o <code>git push</code> das branches.
+      Tudo com passo a passo em <code>FIREBASE.md</code> e <code>GIT.md</code>.
+    </div>
+
+    <h2>As 5 fases do trabalho</h2>
+    <div class="phase"><div class="n">1</div><div class="c"><div class="t">Protótipo HTML de alta fidelidade <span class="tag ok">concluída</span></div><div class="d">Fluxo de auth/cadastro navegável, espelho do Figma — serve de spec visual.</div></div></div>
+    <div class="phase"><div class="n">2</div><div class="c"><div class="t">Código React Native + navegação <span class="tag ok">concluída</span></div><div class="d">Projeto Expo + TS: 9 telas, componentes reutilizáveis, tema, navegação tipada.</div></div></div>
+    <div class="phase"><div class="n">3</div><div class="c"><div class="t">Backend Firebase <span class="tag ok">concluída</span></div><div class="d">Auth, Firestore (perfis + crianças), Storage, regras de segurança, guia de setup.</div></div></div>
+    <div class="phase"><div class="n">4</div><div class="c"><div class="t">App completo navegável (plano B) <span class="tag ok">concluída</span></div><div class="d">Áreas Kids, Responsável e Terapeuta no protótipo, com comunicação por voz real.</div></div></div>
+    <div class="phase"><div class="n">5</div><div class="c"><div class="t">Branches + handoff <span class="tag ok">concluída</span></div><div class="d">Estratégia de duas branches com comandos de Git e este documento.</div></div></div>
+
+    <div class="foot">Atípicos · Documento gerado para a entrega da disciplina · página 1 de 2</div>
+  </section>
+
+  <!-- PÁGINA 2 -->
+  <section class="page">
+    <p class="eyebrow">Entrega · Detalhes técnicos</p>
+    <h1 style="font-size:30px">Branches, requisitos e próximos passos</h1>
+
+    <h2>Organização em duas branches</h2>
+    <div class="branches">
+      <div class="branch">
+        <div class="h">feature/auth-cadastro</div>
+        <div class="b"><b>Sua parte definida.</b>
+          <ul>
+            <li>Backend Firebase completo</li>
+            <li>Splash · Inicial · Cadastro</li>
+            <li>Login · Recuperação de senha</li>
+            <li>Pós-login = placeholder</li>
+          </ul>
+        </div>
+      </div>
+      <div class="branch">
+        <div class="h">plano-b-completo</div>
+        <div class="b"><b>App inteiro — salvação.</b>
+          <ul>
+            <li>Tudo da sua branch +</li>
+            <li>Área Kids (6 atividades)</li>
+            <li>Área Responsável</li>
+            <li>Área Terapeuta</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <p>Ambas partem da mesma base <code>rn-atipicos/</code>. No dia da entrega: se o time fechar o app, mescla-se a sua branch limpa; se faltar, mescla-se o plano B. Comandos exatos em <code>rn-atipicos/GIT.md</code>.</p>
+
+    <h2>Requisitos cobertos no código</h2>
+    <table>
+      <thead><tr><th>Req.</th><th>Descrição</th><th>Onde</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>RF01</td><td>Cadastro responsável/terapeuta</td><td><code>auth.cadastrarAdulto</code></td><td><span class="st full">pronto</span></td></tr>
+        <tr><td>RF02</td><td>Login</td><td><code>auth.login</code></td><td><span class="st full">pronto</span></td></tr>
+        <tr><td>RF03</td><td>Recuperação de senha</td><td><code>auth.recuperarSenha</code></td><td><span class="st part">via e-mail*</span></td></tr>
+        <tr><td>RF04–06</td><td>Cadastro/edição da criança</td><td><code>services/criancas.ts</code></td><td><span class="st full">pronto</span></td></tr>
+        <tr><td>RF18</td><td>Upload de foto</td><td><code>services/storage.ts</code></td><td><span class="st full">pronto</span></td></tr>
+        <tr><td>RNF07/08</td><td>Segurança por dono + auth</td><td><code>firestore.rules</code></td><td><span class="st full">pronto</span></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12.5px;color:var(--muted)">*A redefinição segue o método seguro do Firebase (link por e-mail). O fluxo “pergunta de segurança + nova senha” exige uma Cloud Function — código pronto em <code>FIREBASE.md</code>.</p>
+
+    <h2>Como rodar (resumo)</h2>
+    <ol class="steps">
+      <li>Copie <code>rn-atipicos/</code> para a raiz do repositório.</li>
+      <li><code>cd rn-atipicos &amp;&amp; npm install &amp;&amp; npx expo install --fix</code></li>
+      <li>Crie o projeto no Firebase, ative Email/Senha + Firestore + Storage (ver <code>FIREBASE.md</code>).</li>
+      <li><code>cp .env.example .env</code> e cole as chaves do Firebase.</li>
+      <li>Publique <code>firestore.rules</code> e <code>storage.rules</code>.</li>
+      <li><code>npx expo start</code> → abra no Expo Go.</li>
+      <li>Suba as branches seguindo <code>GIT.md</code>.</li>
+    </ol>
+
+    <div class="note">
+      <b>Arquivos-guia no projeto.</b> <code>README.md</code> (estrutura e execução) ·
+      <code>FIREBASE.md</code> (backend passo a passo) · <code>GIT.md</code> (as duas branches) ·
+      <code>Atípicos - Protótipo.html</code> (app completo navegável, referência viva).
+    </div>
+
+    <div class="foot">Atípicos · Documento gerado para a entrega da disciplina · página 2 de 2</div>
+  </section>
+
+</body>
+</html>
