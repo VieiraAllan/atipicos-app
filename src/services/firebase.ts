@@ -25,8 +25,18 @@ const firebaseConfig = {
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
 };
 
+// Exportado para criar a instância secundária (cadastro da criança sem
+// deslogar o responsável).
+export { firebaseConfig };
+
 // true quando há configuração real do Firebase no .env.
 export const firebaseHabilitado = !!firebaseConfig.apiKey;
+
+// Storage é OPCIONAL e exige plano Blaze (pago). Por padrão fica DESLIGADO —
+// as fotos são guardadas como base64 no Firestore (gratuito). Só ligue se você
+// realmente optar pelo Storage: defina EXPO_PUBLIC_FIREBASE_USE_STORAGE=true.
+export const storageHabilitado =
+  firebaseHabilitado && process.env.EXPO_PUBLIC_FIREBASE_USE_STORAGE === "true";
 
 let app: FirebaseApp | null = null;
 let auth: Auth | null = null;
@@ -42,7 +52,7 @@ if (firebaseHabilitado) {
     auth = getAuth(app);
   }
   db = getFirestore(app);
-  storage = getStorage(app);
+  if (storageHabilitado) storage = getStorage(app);
 } else {
   // eslint-disable-next-line no-console
   console.warn(

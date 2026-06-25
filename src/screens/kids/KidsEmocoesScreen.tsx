@@ -4,8 +4,9 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/types";
 import { colors } from "@/theme/colors";
 import { fonts } from "@/theme/typography";
-import AppShell, { SectionTitle } from "@/components/internas/AppShell";
-import { EMOCOES, NOME_KID } from "@/constants/areaData";
+import { SectionTitle } from "@/components/internas/AppShell";
+import KidsShell from "@/components/internas/KidsShell";
+import { EMOCOES } from "@/constants/areaData";
 import { falar } from "@/utils/speech";
 
 type Props = NativeStackScreenProps<RootStackParamList, "KidsEmocoes">;
@@ -19,13 +20,7 @@ export default function KidsEmocoesScreen({ navigation }: Props) {
   };
 
   return (
-    <AppShell
-      nome={NOME_KID}
-      bg={colors.emotionsBg}
-      onSair={() => navigation.reset({ index: 0, routes: [{ name: "Inicial" }] })}
-      navItens={[{ icon: "home", onPress: () => navigation.navigate("HomeKids") }]}
-      onSOS={() => navigation.navigate("SOS")}
-    >
+    <KidsShell navigation={navigation} bg={colors.emotionsBg}>
       <SectionTitle color={colors.white}>Como você está se sentindo?</SectionTitle>
       <View style={styles.grid}>
         {EMOCOES.map((e) => (
@@ -39,7 +34,7 @@ export default function KidsEmocoesScreen({ navigation }: Props) {
           </Pressable>
         ))}
       </View>
-    </AppShell>
+    </KidsShell>
   );
 }
 

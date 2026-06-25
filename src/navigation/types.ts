@@ -11,6 +11,11 @@ export type RootStackParamList = {
   RecuperacaoSenha: undefined;
   Sucesso: { tipo: "cadastro" | "recuperacao" };
 
+  // ── Telas de Configurações (Responsável / Terapeuta) ──
+  MinhaConta: undefined;
+  TrocarSenha: undefined;
+  ConfigNotificacoes: undefined;
+
   // ── Áreas internas — Kids ──
   HomeKids: undefined;
   KidsEmocoes: undefined;
@@ -19,20 +24,22 @@ export type RootStackParamList = {
   KidsPsico: undefined;
   KidsEscola: undefined;
   KidsComunicacao: undefined;
+  AtividadeGrade: { id: string };
+  Respiracao: undefined;
   SOS: undefined;
 
   // ── Áreas internas — Responsável ──
   HomeResponsavel: undefined;
-  PaisEditarTarefas: undefined;
+  PaisEditarTarefas: { criancaId?: string } | undefined;
   PaisControle: undefined;
-  PaisRelatorios: undefined;
+  PaisRelatorios: { criancaId?: string } | undefined;
   PaisLocalizacao: undefined;
   PaisNoticias: undefined;
   PaisConfig: undefined;
 
   // ── Áreas internas — Terapeuta ──
   HomeTerapeuta: undefined;
-  TerapeutaPaciente: { indice: number };
+  TerapeutaPaciente: { criancaId: string };
   TerapeutaConfig: undefined;
 };
 

@@ -19,10 +19,16 @@ export function mascaraData(v: string): string {
     .replace(/(\d{2})(\d)/, "$1/$2");
 }
 
+export function mascaraHora(v: string): string {
+  const d = v.replace(/\D/g, "").slice(0, 4);
+  return d.replace(/(\d{2})(\d)/, "$1:$2");
+}
+
 export const MASCARAS = {
   cpf: mascaraCPF,
   cep: mascaraCEP,
   data: mascaraData,
+  hora: mascaraHora,
 } as const;
 
 export type MascaraTipo = keyof typeof MASCARAS;

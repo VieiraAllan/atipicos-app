@@ -4,8 +4,9 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/types";
 import { colors } from "@/theme/colors";
 import { fonts } from "@/theme/typography";
-import AppShell, { SectionTitle } from "@/components/internas/AppShell";
-import { SIMBOLOS_AAC, Simbolo, NOME_KID } from "@/constants/areaData";
+import { SectionTitle } from "@/components/internas/AppShell";
+import KidsShell from "@/components/internas/KidsShell";
+import { SIMBOLOS_AAC, Simbolo } from "@/constants/areaData";
 import { falar } from "@/utils/speech";
 
 type Props = NativeStackScreenProps<RootStackParamList, "KidsComunicacao">;
@@ -25,12 +26,7 @@ export default function KidsComunicacaoScreen({ navigation }: Props) {
   };
 
   return (
-    <AppShell
-      nome={NOME_KID}
-      onSair={() => navigation.reset({ index: 0, routes: [{ name: "Inicial" }] })}
-      navItens={[{ icon: "home", onPress: () => navigation.navigate("HomeKids") }]}
-      onSOS={() => navigation.navigate("SOS")}
-    >
+    <KidsShell navigation={navigation}>
       <SectionTitle>Toque para falar</SectionTitle>
 
       <View style={styles.bar}>
@@ -63,7 +59,7 @@ export default function KidsComunicacaoScreen({ navigation }: Props) {
           </Pressable>
         ))}
       </View>
-    </AppShell>
+    </KidsShell>
   );
 }
 

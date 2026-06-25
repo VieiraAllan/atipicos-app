@@ -13,12 +13,19 @@ import CadastroCriancaScreen from "@/screens/CadastroCriancaScreen";
 import RecuperacaoSenhaScreen from "@/screens/RecuperacaoSenhaScreen";
 import SucessoScreen from "@/screens/SucessoScreen";
 
+// Configurações (compartilhadas)
+import MinhaContaScreen from "@/screens/internas/MinhaContaScreen";
+import TrocarSenhaScreen from "@/screens/internas/TrocarSenhaScreen";
+import ConfigNotificacoesScreen from "@/screens/internas/ConfigNotificacoesScreen";
+
 // Área Kids
 import HomeKidsScreen from "@/screens/kids/HomeKidsScreen";
 import KidsEmocoesScreen from "@/screens/kids/KidsEmocoesScreen";
 import KidsTarefasScreen from "@/screens/kids/KidsTarefasScreen";
 import { KidsFonoScreen, KidsPsicoScreen, KidsEscolaScreen } from "@/screens/kids/ListaAtividadesScreens";
 import KidsComunicacaoScreen from "@/screens/kids/KidsComunicacaoScreen";
+import AtividadeGradeScreen from "@/screens/kids/AtividadeGradeScreen";
+import RespiracaoScreen from "@/screens/kids/RespiracaoScreen";
 import SOSScreen from "@/screens/kids/SOSScreen";
 
 // Área Responsável
@@ -56,6 +63,11 @@ export default function RootNavigator() {
       <Stack.Screen name="RecuperacaoSenha" component={RecuperacaoSenhaScreen} />
       <Stack.Screen name="Sucesso" component={SucessoScreen} options={{ animation: "fade" }} />
 
+      {/* Configurações */}
+      <Stack.Screen name="MinhaConta" component={MinhaContaScreen} />
+      <Stack.Screen name="TrocarSenha" component={TrocarSenhaScreen} />
+      <Stack.Screen name="ConfigNotificacoes" component={ConfigNotificacoesScreen} />
+
       {/* Kids */}
       <Stack.Screen name="HomeKids" component={HomeKidsScreen} options={{ animation: "fade", gestureEnabled: false }} />
       <Stack.Screen name="KidsEmocoes" component={KidsEmocoesScreen} />
@@ -64,6 +76,8 @@ export default function RootNavigator() {
       <Stack.Screen name="KidsPsico" component={KidsPsicoScreen} />
       <Stack.Screen name="KidsEscola" component={KidsEscolaScreen} />
       <Stack.Screen name="KidsComunicacao" component={KidsComunicacaoScreen} />
+      <Stack.Screen name="AtividadeGrade" component={AtividadeGradeScreen} />
+      <Stack.Screen name="Respiracao" component={RespiracaoScreen} />
       <Stack.Screen name="SOS" component={SOSScreen} options={{ animation: "fade", presentation: "modal" }} />
 
       {/* Responsável */}

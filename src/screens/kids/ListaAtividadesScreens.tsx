@@ -4,39 +4,44 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/types";
 import { colors } from "@/theme/colors";
 import { fonts } from "@/theme/typography";
-import AppShell, { SectionTitle } from "@/components/internas/AppShell";
-import { Atividade, FONO, PSICO, ESCOLA, NOME_KID } from "@/constants/areaData";
+import { SectionTitle } from "@/components/internas/AppShell";
+import KidsShell from "@/components/internas/KidsShell";
+import { MenuItem, MENU_FONO, MENU_PSICO, MENU_ESCOLA } from "@/constants/atividades";
 import { falar } from "@/utils/speech";
 
-// Tela reutilizável de lista de atividades (Fono / Psico / Escola).
-function ListaAtividades({
+// Menu de atividades: cada item navega para uma sub-atividade real
+// (ou avisa "em breve" quando ainda não há conteúdo).
+function MenuAtividades({
   navigation,
   titulo,
   itens,
 }: {
   navigation: any;
   titulo: string;
-  itens: Atividade[];
+  itens: MenuItem[];
 }) {
+  const abrir = (it: MenuItem) => {
+    if (!it.destino) {
+      falar(it.ti); // placeholder: lê o título até a atividade existir
+      return;
+    }
+    navigation.navigate(it.destino, it.param);
+  };
+
   return (
-    <AppShell
-      nome={NOME_KID}
-      onSair={() => navigation.reset({ index: 0, routes: [{ name: "Inicial" }] })}
-      navItens={[{ icon: "home", onPress: () => navigation.navigate("HomeKids") }]}
-      onSOS={() => navigation.navigate("SOS")}
-    >
+    <KidsShell navigation={navigation}>
       <SectionTitle>{titulo}</SectionTitle>
       {itens.map((it, i) => (
-        <Pressable key={i} style={styles.item} onPress={() => falar(it.ti)}>
+        <Pressable key={i} style={styles.item} onPress={() => abrir(it)}>
           <Text style={styles.emoji}>{it.emoji}</Text>
           <View style={styles.body}>
             <Text style={styles.ti}>{it.ti}</Text>
             <Text style={styles.su}>{it.su}</Text>
           </View>
-          <Text style={styles.go}>▶</Text>
+          <Text style={styles.go}>{it.destino ? "▶" : "•"}</Text>
         </Pressable>
       ))}
-    </AppShell>
+    </KidsShell>
   );
 }
 
@@ -53,11 +58,11 @@ const styles = StyleSheet.create({
 });
 
 export function KidsFonoScreen(p: NativeStackScreenProps<RootStackParamList, "KidsFono">) {
-  return <ListaAtividades navigation={p.navigation} titulo="Fonoaudióloga 🎤" itens={FONO} />;
+  return <MenuAtividades navigation={p.navigation} titulo="Fonoaudióloga 🎤" itens={MENU_FONO} />;
 }
 export function KidsPsicoScreen(p: NativeStackScreenProps<RootStackParamList, "KidsPsico">) {
-  return <ListaAtividades navigation={p.navigation} titulo="Psicólogo 🧠" itens={PSICO} />;
+  return <MenuAtividades navigation={p.navigation} titulo="Psicólogo 🧠" itens={MENU_PSICO} />;
 }
 export function KidsEscolaScreen(p: NativeStackScreenProps<RootStackParamList, "KidsEscola">) {
-  return <ListaAtividades navigation={p.navigation} titulo="Atividade Escolar 📖" itens={ESCOLA} />;
+  return <MenuAtividades navigation={p.navigation} titulo="Atividade Escolar 📖" itens={MENU_ESCOLA} />;
 }
