@@ -1,31 +1,59 @@
 rules_version = '2';
 
 // Regras de segurança do Firestore — Atípicos (RNF07, RNF08).
-// Princípio: cada usuário só acessa o próprio perfil; cada responsável só
-// acessa as crianças que ele cadastrou.
+// Modelo: responsável ↔ criança ↔ terapeuta, com tarefas e localizações.
+// Os documentos guardam os uids relacionados (responsavelUid, terapeutaId,
+// contaUid) para permitir consultas e checagens de acesso simples.
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    function autenticado() {
-      return request.auth != null;
-    }
+    function logado() { return request.auth != null; }
+    function eu() { return request.auth.uid; }
 
-    // Perfis de usuário (responsável / terapeuta / atípico)
+    // Perfis. Leitura liberada para usuários logados (necessário para listar
+    // terapeutas e validar o perfil no login). O responsável cria o perfil da
+    // criança ao cadastrá-la; cada um só edita/exclui o próprio.
     match /usuarios/{uid} {
-      allow read: if autenticado() && request.auth.uid == uid;
-      allow create: if autenticado() && request.auth.uid == uid;
-      allow update, delete: if autenticado() && request.auth.uid == uid;
+      allow read: if logado();
+      allow create: if logado();
+      allow update, delete: if logado() && eu() == uid;
     }
 
-    // Crianças — pertencem ao responsável que as cadastrou
-    match /criancas/{criancaId} {
-      allow read, update, delete:
-        if autenticado() && resource.data.responsavelUid == request.auth.uid;
-      allow create:
-        if autenticado() && request.resource.data.responsavelUid == request.auth.uid;
+    // Crianças — acessíveis pelo responsável, pelo terapeuta vinculado e pela
+    // própria conta de login da criança.
+    match /criancas/{id} {
+      function envolvido(d) {
+        return eu() == d.responsavelUid || eu() == d.terapeutaId || eu() == d.contaUid;
+      }
+      allow read: if logado() && envolvido(resource.data);
+      allow create: if logado() && eu() == request.resource.data.responsavelUid;
+      allow update, delete: if logado() && envolvido(resource.data);
+    }
 
-      // (Fase futura) Relatórios criados por terapeutas autorizados — RF20/RF21.
-      // match /relatorios/{relatorioId} { ... }
+    // Tarefas — criadas pelo responsável; a criança pode concluir (update);
+    // todos os envolvidos podem ler.
+    match /tarefas/{id} {
+      function envolvido(d) {
+        return eu() == d.responsavelUid || eu() == d.terapeutaId || eu() == d.contaUid;
+      }
+      allow read: if logado() && envolvido(resource.data);
+      allow create: if logado() && eu() == request.resource.data.responsavelUid;
+      allow update: if logado() && envolvido(resource.data);
+      allow delete: if logado() && eu() == resource.data.responsavelUid;
+    }
+
+    // Localizações — a criança grava a própria; o responsável grava a inicial;
+    // responsável/terapeuta/criança podem ler.
+    match /localizacoes/{criancaId} {
+      allow read: if logado() && (
+        eu() == resource.data.responsavelUid ||
+        eu() == resource.data.terapeutaId ||
+        eu() == resource.data.contaUid
+      );
+      allow write: if logado() && (
+        eu() == request.resource.data.responsavelUid ||
+        eu() == request.resource.data.contaUid
+      );
     }
 
     // Bloqueia qualquer outro caminho por padrão.

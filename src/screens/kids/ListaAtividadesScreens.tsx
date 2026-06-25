@@ -4,9 +4,9 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/types";
 import { colors } from "@/theme/colors";
 import { fonts } from "@/theme/typography";
-import AppShell, { SectionTitle } from "@/components/internas/AppShell";
+import { SectionTitle } from "@/components/internas/AppShell";
+import KidsShell from "@/components/internas/KidsShell";
 import { MenuItem, MENU_FONO, MENU_PSICO, MENU_ESCOLA } from "@/constants/atividades";
-import { NOME_KID } from "@/constants/areaData";
 import { falar } from "@/utils/speech";
 
 // Menu de atividades: cada item navega para uma sub-atividade real
@@ -29,12 +29,7 @@ function MenuAtividades({
   };
 
   return (
-    <AppShell
-      nome={NOME_KID}
-      onSair={() => navigation.reset({ index: 0, routes: [{ name: "Inicial" }] })}
-      navItens={[{ icon: "home", onPress: () => navigation.navigate("HomeKids") }]}
-      onSOS={() => navigation.navigate("SOS")}
-    >
+    <KidsShell navigation={navigation}>
       <SectionTitle>{titulo}</SectionTitle>
       {itens.map((it, i) => (
         <Pressable key={i} style={styles.item} onPress={() => abrir(it)}>
@@ -46,7 +41,7 @@ function MenuAtividades({
           <Text style={styles.go}>{it.destino ? "▶" : "•"}</Text>
         </Pressable>
       ))}
-    </AppShell>
+    </KidsShell>
   );
 }
 

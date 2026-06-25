@@ -13,6 +13,11 @@ import CadastroCriancaScreen from "@/screens/CadastroCriancaScreen";
 import RecuperacaoSenhaScreen from "@/screens/RecuperacaoSenhaScreen";
 import SucessoScreen from "@/screens/SucessoScreen";
 
+// Configurações (compartilhadas)
+import MinhaContaScreen from "@/screens/internas/MinhaContaScreen";
+import TrocarSenhaScreen from "@/screens/internas/TrocarSenhaScreen";
+import ConfigNotificacoesScreen from "@/screens/internas/ConfigNotificacoesScreen";
+
 // Área Kids
 import HomeKidsScreen from "@/screens/kids/HomeKidsScreen";
 import KidsEmocoesScreen from "@/screens/kids/KidsEmocoesScreen";
@@ -57,6 +62,11 @@ export default function RootNavigator() {
       <Stack.Screen name="CadastroCrianca" component={CadastroCriancaScreen} />
       <Stack.Screen name="RecuperacaoSenha" component={RecuperacaoSenhaScreen} />
       <Stack.Screen name="Sucesso" component={SucessoScreen} options={{ animation: "fade" }} />
+
+      {/* Configurações */}
+      <Stack.Screen name="MinhaConta" component={MinhaContaScreen} />
+      <Stack.Screen name="TrocarSenha" component={TrocarSenhaScreen} />
+      <Stack.Screen name="ConfigNotificacoes" component={ConfigNotificacoesScreen} />
 
       {/* Kids */}
       <Stack.Screen name="HomeKids" component={HomeKidsScreen} options={{ animation: "fade", gestureEnabled: false }} />

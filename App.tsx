@@ -14,6 +14,7 @@ import { Inter_400Regular, Inter_700Bold } from "@expo-google-fonts/inter";
 import { HappyMonkey_400Regular } from "@expo-google-fonts/happy-monkey";
 
 import RootNavigator from "@/navigation/RootNavigator";
+import { AppStoreProvider } from "@/store/AppStore";
 import { colors } from "@/theme/colors";
 
 SplashScreen.preventAutoHideAsync();
@@ -36,12 +37,14 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <View style={{ flex: 1, backgroundColor: colors.cream }} onLayout={onReady}>
-        <NavigationContainer onReady={onReady}>
-          <StatusBar style="dark" />
-          <RootNavigator />
-        </NavigationContainer>
-      </View>
+      <AppStoreProvider>
+        <View style={{ flex: 1, backgroundColor: colors.cream }} onLayout={onReady}>
+          <NavigationContainer onReady={onReady}>
+            <StatusBar style="dark" />
+            <RootNavigator />
+          </NavigationContainer>
+        </View>
+      </AppStoreProvider>
     </SafeAreaProvider>
   );
 }

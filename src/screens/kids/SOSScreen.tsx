@@ -1,20 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/types";
 import { colors } from "@/theme/colors";
 import { fonts } from "@/theme/typography";
 import PrimaryButton from "@/components/PrimaryButton";
+import { useApp } from "@/store/AppStore";
+import { obterLocalizacaoAtual } from "@/services/localizacao";
 
 type Props = NativeStackScreenProps<RootStackParamList, "SOS">;
 
-// SOS — RF15 (localização enviada aos responsáveis).
+// SOS — RF15: ao acionar, captura a localização atual e a envia aos
+// responsáveis (registra no store; o responsável vê no mapa).
 export default function SOSScreen({ navigation }: Props) {
+  const { usuarioAtual, registrarLocalizacao } = useApp();
+  const [status, setStatus] = useState("Enviando sua localização…");
+
+  useEffect(() => {
+    let ativo = true;
+    (async () => {
+      const criancaId = usuarioAtual?.criancaId;
+      if (!criancaId) {
+        if (ativo) setStatus("Alerta enviado aos responsáveis.");
+        return;
+      }
+      try {
+        const { lat, lng } = await obterLocalizacaoAtual();
+        if (!ativo) return;
+        registrarLocalizacao(criancaId, lat, lng, "sos");
+        setStatus("Localização enviada aos responsáveis. ✓");
+      } catch {
+        if (ativo) setStatus("Alerta enviado. (Não foi possível obter o GPS.)");
+      }
+    })();
+    return () => { ativo = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <View style={styles.wrap}>
       <Text style={styles.big}>🚨</Text>
       <Text style={styles.ttl}>SOS acionado!</Text>
-      <Text style={styles.sub}>A localização da criança foi enviada aos responsáveis cadastrados.</Text>
+      <Text style={styles.sub}>{status}</Text>
       <PrimaryButton label="Voltar" variant="success" onPress={() => navigation.goBack()} />
     </View>
   );

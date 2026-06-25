@@ -25,6 +25,10 @@ const firebaseConfig = {
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
 };
 
+// Exportado para criar a instância secundária (cadastro da criança sem
+// deslogar o responsável).
+export { firebaseConfig };
+
 // true quando há configuração real do Firebase no .env.
 export const firebaseHabilitado = !!firebaseConfig.apiKey;
 

@@ -1,22 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/types";
 import { colors } from "@/theme/colors";
 import { fonts } from "@/theme/typography";
-import AppShell from "@/components/internas/AppShell";
-import { CARDS_KIDS, NOME_KID } from "@/constants/areaData";
+import KidsShell from "@/components/internas/KidsShell";
+import { CARDS_KIDS } from "@/constants/areaData";
+import { useApp } from "@/store/AppStore";
+import { obterLocalizacaoAtual } from "@/services/localizacao";
 
 type Props = NativeStackScreenProps<RootStackParamList, "HomeKids">;
 
 export default function HomeKidsScreen({ navigation }: Props) {
+  const { usuarioAtual, registrarLocalizacao } = useApp();
+
+  // Compartilha a localização da criança uma vez ao abrir (melhor esforço):
+  // o responsável passa a ver onde ela está. Falhas são ignoradas.
+  useEffect(() => {
+    const criancaId = usuarioAtual?.criancaId;
+    if (!criancaId) return;
+    let ativo = true;
+    obterLocalizacaoAtual()
+      .then(({ lat, lng }) => { if (ativo) registrarLocalizacao(criancaId, lat, lng, "gps"); })
+      .catch(() => {});
+    return () => { ativo = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <AppShell
-      nome={NOME_KID}
-      onSair={() => navigation.reset({ index: 0, routes: [{ name: "Inicial" }] })}
-      navItens={[{ icon: "home", ativo: true, onPress: () => {} }]}
-      onSOS={() => navigation.navigate("SOS")}
-    >
+    <KidsShell navigation={navigation}>
       <View style={styles.grid}>
         {CARDS_KIDS.map((c) => (
           <Pressable
@@ -29,7 +41,7 @@ export default function HomeKidsScreen({ navigation }: Props) {
           </Pressable>
         ))}
       </View>
-    </AppShell>
+    </KidsShell>
   );
 }
 

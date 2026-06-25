@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, Pressable, Alert, StyleSheet } from "react-native";
 import { colors } from "@/theme/colors";
 import { fonts } from "@/theme/typography";
 import AppShell, { SectionTitle } from "@/components/internas/AppShell";
@@ -7,31 +7,47 @@ import { NavItem } from "@/components/internas/BottomNav";
 import { CONFIG_ITENS } from "@/constants/areaData";
 
 // Tela de configurações reutilizada por Responsável e Terapeuta.
+// Cada item navega para a sua tela; "Sobre" ainda será montada.
 export default function ConfigScreen({
   nome,
   navItens,
+  navigation,
   onSair,
   onSOS,
 }: {
   nome: string;
   navItens: NavItem[];
+  navigation: any;
   onSair: () => void;
   onSOS?: () => void;
 }) {
+  const abrir = (rota?: string) => {
+    if (!rota) return;
+    if (rota === "Sobre") {
+      Alert.alert("Em breve", "A tela Sobre a equipe será montada na próxima etapa.");
+      return;
+    }
+    navigation.navigate(rota);
+  };
+
   return (
     <AppShell nome={nome} onSair={onSair} navItens={navItens} onSOS={onSOS}>
       <SectionTitle>Configurações</SectionTitle>
       {CONFIG_ITENS.map((c, i) => (
-        <View key={i} style={styles.item}>
+        <Pressable
+          key={i}
+          style={({ pressed }) => [styles.item, pressed && styles.itemPressed]}
+          onPress={() => abrir(c.rota)}
+        >
           <Text style={styles.emoji}>{c.emoji}</Text>
           <View style={styles.body}>
             <Text style={styles.ti}>{c.ti}</Text>
             <Text style={styles.su}>{c.su}</Text>
           </View>
           <Text style={styles.go}>›</Text>
-        </View>
+        </Pressable>
       ))}
-      <Pressable style={styles.item} onPress={onSair}>
+      <Pressable style={({ pressed }) => [styles.item, pressed && styles.itemPressed]} onPress={onSair}>
         <Text style={styles.emoji}>🚪</Text>
         <View style={styles.body}><Text style={[styles.ti, { color: "#EB5757" }]}>Sair da conta</Text></View>
         <Text style={styles.go}>›</Text>
@@ -42,6 +58,7 @@ export default function ConfigScreen({
 
 const styles = StyleSheet.create({
   item: { flexDirection: "row", alignItems: "center", gap: 14, backgroundColor: colors.white, borderWidth: 3, borderColor: colors.ink, borderRadius: 14, padding: 14, marginBottom: 13 },
+  itemPressed: { backgroundColor: colors.rowBgHover },
   emoji: { fontSize: 30 },
   body: { flex: 1 },
   ti: { fontFamily: fonts.quicksandBold, fontSize: 16, color: colors.ink },

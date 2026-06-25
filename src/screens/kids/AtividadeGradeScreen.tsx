@@ -4,10 +4,9 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/types";
 import { colors } from "@/theme/colors";
 import { fonts } from "@/theme/typography";
-import AppShell from "@/components/internas/AppShell";
+import KidsShell from "@/components/internas/KidsShell";
 import BackChip from "@/components/internas/BackChip";
 import { CATALOGO, ItemAtividade } from "@/constants/atividades";
-import { NOME_KID } from "@/constants/areaData";
 import { falar } from "@/utils/speech";
 
 type Props = NativeStackScreenProps<RootStackParamList, "AtividadeGrade">;
@@ -22,19 +21,14 @@ export default function AtividadeGradeScreen({ navigation, route }: Props) {
   const largura = LARGURA[atividade.colunas] ?? "31%";
 
   return (
-    <AppShell
-      nome={NOME_KID}
-      onSair={() => navigation.reset({ index: 0, routes: [{ name: "Inicial" }] })}
-      navItens={[{ icon: "home", onPress: () => navigation.navigate("HomeKids") }]}
-      onSOS={() => navigation.navigate("SOS")}
-    >
+    <KidsShell navigation={navigation}>
       <BackChip onBack={() => navigation.goBack()} titulo={atividade.titulo} />
       <View style={styles.grid}>
         {atividade.itens.map((item, i) => (
           <Botao key={i} item={item} largura={largura} alto={atividade.colunas === 1} />
         ))}
       </View>
-    </AppShell>
+    </KidsShell>
   );
 }
 

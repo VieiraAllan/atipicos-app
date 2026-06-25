@@ -4,15 +4,15 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/types";
 import FormScreen from "@/components/FormScreen";
 import { CAMPOS_ADULTO } from "@/constants/formData";
-import * as auth from "@/services/auth";
-import type { DadosCadastroAdulto } from "@/services/auth";
 import { validarCPF, emailValido } from "@/utils/validacao";
 import { mensagemErroAuth } from "@/utils/erros";
+import { useApp } from "@/store/AppStore";
 
 type Props = NativeStackScreenProps<RootStackParamList, "CadastroAdulto">;
 
 export default function CadastroAdultoScreen({ navigation, route }: Props) {
   const { perfil } = route.params;
+  const { registrar } = useApp();
 
   const handleSubmit = async (v: Record<string, string>) => {
     const obrigatorios = ["nome", "cpf", "email", "senha", "confirmarSenha"];
@@ -37,8 +37,9 @@ export default function CadastroAdultoScreen({ navigation, route }: Props) {
       return;
     }
     try {
-      await auth.cadastrarAdulto(perfil, v as unknown as DadosCadastroAdulto);
-      Alert.alert("Tudo certo!", "Cadastro realizado com sucesso.");
+      // cria a conta (local ou Firebase, conforme o .env) com o perfil correto
+      await registrar(perfil, { nome: v.nome, email: v.email, senha: v.senha, cpf: v.cpf });
+      Alert.alert("Tudo certo!", "Cadastro realizado com sucesso. Agora é só fazer login.");
       navigation.replace("Sucesso", { tipo: "cadastro" });
     } catch (e) {
       Alert.alert("Erro", mensagemErroAuth(e));

@@ -8,12 +8,13 @@ import AppShell, { SectionTitle } from "@/components/internas/AppShell";
 import BackChip from "@/components/internas/BackChip";
 import { Card } from "@/components/internas/widgets";
 import { navPais } from "./HomeResponsavelScreen";
-import { NOME_RESP } from "@/constants/areaData";
+import { useApp } from "@/store/AppStore";
 
 type Props = NativeStackScreenProps<RootStackParamList, "PaisControle">;
 
 // Controle de uso: limite de tempo + categorias liberadas.
 export default function PaisControleScreen({ navigation }: Props) {
+  const { usuarioAtual, sair } = useApp();
   const [limite, setLimite] = useState(2);
   const [cats, setCats] = useState<Record<string, boolean>>({ Jogos: true, Vídeos: false, Educativos: true });
   const toggle = (k: string) => setCats((c) => ({ ...c, [k]: !c[k] }));
@@ -21,8 +22,8 @@ export default function PaisControleScreen({ navigation }: Props) {
 
   return (
     <AppShell
-      nome={NOME_RESP}
-      onSair={() => navigation.reset({ index: 0, routes: [{ name: "Inicial" }] })}
+      nome={usuarioAtual?.nome ?? "Responsável"}
+      onSair={() => { sair(); navigation.reset({ index: 0, routes: [{ name: "Inicial" }] }); }}
       navItens={navPais(navigation, "home")}
       onSOS={() => navigation.navigate("SOS")}
     >
