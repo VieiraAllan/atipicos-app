@@ -19,18 +19,18 @@ export default function InicialScreen({ navigation }: Props) {
     <ScreenContainer center>
       <Logo width={250} />
       <View style={styles.stack}>
-        <PrimaryButton label="Log in Atípico" size="lg" onPress={() => navigation.navigate("Login", { perfil: "atipico" })} />
-        <PrimaryButton label="Log in Responsável" size="lg" onPress={() => navigation.navigate("Login", { perfil: "responsavel" })} />
-        <PrimaryButton label="Log in Terapeuta" size="lg" onPress={() => navigation.navigate("Login", { perfil: "terapeuta" })} />
+        <PrimaryButton label="Login Atípico" size="lg" onPress={() => navigation.navigate("Login", { perfil: "atipico" })} />
+        <PrimaryButton label="Login Responsável" size="lg" onPress={() => navigation.navigate("Login", { perfil: "responsavel" })} />
+        <PrimaryButton label="Login Terapeuta" size="lg" onPress={() => navigation.navigate("Login", { perfil: "terapeuta" })} />
       </View>
       <PrimaryButton label="Criar Conta" size="sm" style={styles.criar} onPress={() => navigation.navigate("CadastroEscolha")} />
 
-      {/* Indicador de modo — mostra se a sincronização em nuvem está ativa */}
+      {/* Indicador de modo — mostra se a sincronização em nuvem está ativa 
       <View style={[styles.badge, firebase ? styles.badgeOn : styles.badgeOff]}>
         <Text style={styles.badgeText}>
           {firebase ? "☁️ Sincronização Firebase ativa" : "📴 Modo local (sem .env / offline)"}
         </Text>
-      </View>
+      </View>*/}
     </ScreenContainer>
   );
 }
