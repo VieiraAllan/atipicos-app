@@ -13,7 +13,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "SOS">;
 // SOS — RF15: ao acionar, captura a localização atual e a envia aos
 // responsáveis (registra no store; o responsável vê no mapa).
 export default function SOSScreen({ navigation }: Props) {
-  const { usuarioAtual, registrarLocalizacao } = useApp();
+  const { usuarioAtual, registrarLocalizacao, registrarAlertaSOS } = useApp();
   const [status, setStatus] = useState("Enviando sua localização…");
 
   useEffect(() => {
@@ -28,8 +28,10 @@ export default function SOSScreen({ navigation }: Props) {
         const { lat, lng } = await obterLocalizacaoAtual();
         if (!ativo) return;
         registrarLocalizacao(criancaId, lat, lng, "sos");
+        registrarAlertaSOS(criancaId, lat, lng);
         setStatus("Localização enviada aos responsáveis. ✓");
       } catch {
+        registrarAlertaSOS(criancaId);
         if (ativo) setStatus("Alerta enviado. (Não foi possível obter o GPS.)");
       }
     })();

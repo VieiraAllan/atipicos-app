@@ -31,7 +31,7 @@ import {
   getDoc, getDocs, serverTimestamp, Unsubscribe,
 } from "firebase/firestore";
 import { auth, db, firebaseConfig } from "@/services/firebase";
-import { AppCtx, Crianca, Localizacao, Stats, Tarefa, Usuario, LOC_PADRAO } from "./types";
+import { AppCtx, Crianca, Localizacao, Stats, Tarefa, Usuario, LOC_PADRAO, Alerta, AlertaView } from "./types";
 
 const novoId = () => "id" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 
@@ -73,6 +73,7 @@ export function useFirebaseStore(): AppCtx {
   const [criancas, setCriancas] = useState<Crianca[]>([]);
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
   const [locs, setLocs] = useState<Record<string, Localizacao>>({});
+  const [alertas, setAlertas] = useState<Alerta[]>([]);
   const [listaTerapeutas, setListaTerapeutas] = useState<Usuario[]>([]);
   const unsubs = useRef<Unsubscribe[]>([]);
 
@@ -113,9 +114,12 @@ export function useFirebaseStore(): AppCtx {
         snap.docs.forEach((d) => { const x = d.data() as any; m[x.criancaId] = { lat: x.lat, lng: x.lng, ts: x.ts, origem: x.origem }; });
         setLocs(m);
       });
+    const onAlertas = (campo: string) =>
+      onSnapshot(query(collection(db!, "alertas"), where(campo, "==", u.uid)), (snap) =>
+        setAlertas(snap.docs.map((d) => { const x = d.data() as any; return { id: d.id, criancaId: x.criancaId, lat: x.lat, lng: x.lng, ts: x.ts }; })));
 
     if (u.perfil === "responsavel") {
-      unsubs.current.push(onCriancas("responsavelUid"), onTarefas("responsavelUid"), onLocs("responsavelUid"));
+      unsubs.current.push(onCriancas("responsavelUid"), onTarefas("responsavelUid"), onLocs("responsavelUid"), onAlertas("responsavelUid"));
     } else if (u.perfil === "terapeuta") {
       unsubs.current.push(onCriancas("terapeutaId"), onTarefas("terapeutaId"));
     } else {
@@ -156,7 +160,7 @@ export function useFirebaseStore(): AppCtx {
 
   const sair = () => {
     limparListeners();
-    setUsuarioAtual(null); setCriancas([]); setTarefas([]); setLocs({});
+    setUsuarioAtual(null); setCriancas([]); setTarefas([]); setLocs({}); setAlertas([]);
     fbSignOut(auth!).catch(() => {});
   };
 
@@ -257,6 +261,28 @@ export function useFirebaseStore(): AppCtx {
 
   const localizacaoDaCrianca = (criancaId: string) => locs[criancaId];
 
+  // ── Alertas de emergência (histórico de SOS) ──
+  const registrarAlertaSOS: AppCtx["registrarAlertaSOS"] = (criancaId, lat, lng) => {
+    const c = criancas.find((x) => x.id === criancaId);
+    const ult = locs[criancaId];
+    const id = novoId();
+    setDoc(doc(db!, "alertas", id), limpo({
+      criancaId,
+      responsavelUid: c?.responsavelUid ?? null,
+      terapeutaId: c?.terapeutaId ?? null,
+      lat: lat ?? ult?.lat ?? LOC_PADRAO.lat,
+      lng: lng ?? ult?.lng ?? LOC_PADRAO.lng,
+      ts: Date.now(),
+    })).catch(() => {});
+  };
+
+  const alertasDoResponsavel = (): AlertaView[] => {
+    const nomePorId = new Map(criancas.map((c) => [c.id, c.nome]));
+    return [...alertas]
+      .sort((a, b) => b.ts - a.ts)
+      .map((a) => ({ id: a.id, criancaNome: nomePorId.get(a.criancaId) ?? "Criança", lat: a.lat, lng: a.lng, ts: a.ts }));
+  };
+
   return {
     pronto, modo: "firebase", usuarioAtual,
     registrar, entrar, sair,
@@ -266,5 +292,6 @@ export function useFirebaseStore(): AppCtx {
     tarefasDaCrianca, adicionarTarefa, alternarTarefa, removerTarefa,
     avaliarCrianca, statsDaCrianca,
     registrarLocalizacao, localizacaoDaCrianca,
+    registrarAlertaSOS, alertasDoResponsavel,
   };
 }

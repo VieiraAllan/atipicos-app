@@ -41,7 +41,6 @@ export default function PaisEditarTarefasScreen({ navigation, route }: Props) {
       nome={usuarioAtual?.nome ?? "Responsável"}
       onSair={logout}
       navItens={navPais(navigation, "home")}
-      onSOS={() => navigation.navigate("SOS")}
     >
       <BackChip onBack={() => navigation.goBack()} titulo="Editar Tarefas" />
 

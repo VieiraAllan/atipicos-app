@@ -37,6 +37,10 @@ export type Tarefa = {
 
 export type Localizacao = { lat: number; lng: number; ts: number; origem: "gps" | "sos" | "inicial" };
 
+// Alerta de emergência (SOS) emitido pela criança; o responsável vê no histórico.
+export type Alerta = { id: string; criancaId: string; lat: number; lng: number; ts: number };
+export type AlertaView = { id: string; criancaNome: string; lat: number; lng: number; ts: number };
+
 export type NovaCrianca = {
   nome: string;
   diagnostico: string;
@@ -80,6 +84,9 @@ export type AppCtx = {
   // localização (rastreio)
   registrarLocalizacao: (criancaId: string, lat: number, lng: number, origem?: Localizacao["origem"]) => void;
   localizacaoDaCrianca: (criancaId: string) => Localizacao | undefined;
+  // alertas de emergência (histórico de SOS, visão do responsável)
+  registrarAlertaSOS: (criancaId: string, lat?: number, lng?: number) => void;
+  alertasDoResponsavel: () => AlertaView[];
 };
 
 export const LOC_PADRAO = { lat: -22.8755, lng: -43.5337 }; // Campo Grande, RJ

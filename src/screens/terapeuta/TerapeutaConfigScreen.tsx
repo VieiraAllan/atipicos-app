@@ -15,6 +15,7 @@ export default function TerapeutaConfigScreen({ navigation }: Props) {
       navItens={navTerapeuta(navigation, "cfg")}
       navigation={navigation}
       onSair={() => { sair(); navigation.reset({ index: 0, routes: [{ name: "Inicial" }] }); }}
+      area="terapeuta"
     />
   );
 }

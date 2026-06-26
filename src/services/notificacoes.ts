@@ -18,7 +18,6 @@ const CHAVE_TOGGLE = "atipicos_alerta_sos";
 Notifications.setNotificationHandler({
   handleNotification: async () =>
     ({
-      shouldShowAlert: true,   // SDK ≤ 52
       shouldShowBanner: true,  // SDK 53+
       shouldShowList: true,    // SDK 53+
       shouldPlaySound: true,

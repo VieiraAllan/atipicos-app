@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Pressable, Alert, StyleSheet } from "react-native";
+import { View, Text, Pressable, StyleSheet } from "react-native";
 import { colors } from "@/theme/colors";
 import { fonts } from "@/theme/typography";
 import AppShell, { SectionTitle } from "@/components/internas/AppShell";
@@ -14,17 +14,19 @@ export default function ConfigScreen({
   navigation,
   onSair,
   onSOS,
+  area,
 }: {
   nome: string;
   navItens: NavItem[];
   navigation: any;
   onSair: () => void;
   onSOS?: () => void;
+  area: "pais" | "terapeuta";
 }) {
   const abrir = (rota?: string) => {
     if (!rota) return;
     if (rota === "Sobre") {
-      Alert.alert("Em breve", "A tela Sobre a equipe será montada na próxima etapa.");
+      navigation.navigate("Sobre", { area });
       return;
     }
     navigation.navigate(rota);

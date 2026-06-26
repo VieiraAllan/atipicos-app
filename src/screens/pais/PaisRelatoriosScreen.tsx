@@ -32,7 +32,6 @@ export default function PaisRelatoriosScreen({ navigation, route }: Props) {
       onSair={logout}
       onSino={() => navigation.navigate("PaisNoticias")}
       navItens={navPais(navigation, "rel")}
-      onSOS={() => navigation.navigate("SOS")}
     >
       <SectionTitle>Relatório de Progresso</SectionTitle>
 

@@ -15,7 +15,8 @@
       "android": {
         "buildType": "app-bundle"
       },
-      "channel": "production"
+      "channel": "production",
+      "environment": "production"
     }
   },
   "submit": {

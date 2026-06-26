@@ -15,7 +15,7 @@ export default function PaisConfigScreen({ navigation }: Props) {
       navItens={navPais(navigation, "cfg")}
       navigation={navigation}
       onSair={() => { sair(); navigation.reset({ index: 0, routes: [{ name: "Inicial" }] }); }}
-      onSOS={() => navigation.navigate("SOS")}
+      area="pais"
     />
   );
 }

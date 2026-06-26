@@ -4,7 +4,7 @@
     "slug": "atipicos-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo-atipicos.png",
+    "icon": "./assets/icon-512.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/logo-atipicos.png",
@@ -29,7 +29,8 @@
         {
           "color": "#EB5757"
         }
-      ]
+      ],
+      "expo-font"
     ],
     "ios": {
       "supportsTablet": true,
@@ -44,10 +45,14 @@
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION"
       ],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo-atipicos.png",
+        "foregroundImage": "./assets/icon-192.png",
         "backgroundColor": "#FDFBF7"
       }
     },
@@ -64,7 +69,6 @@
     },
     "updates": {
       "url": "https://u.expo.dev/367a8241-8188-4e36-ae9b-58718796f27d"
-    },
-    "owner": "gabrielbscassimiro"
+    }
   }
 }

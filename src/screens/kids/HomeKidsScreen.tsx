@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, Pressable, Alert, StyleSheet } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/types";
 import { colors } from "@/theme/colors";
@@ -12,7 +12,14 @@ import { obterLocalizacaoAtual } from "@/services/localizacao";
 type Props = NativeStackScreenProps<RootStackParamList, "HomeKids">;
 
 export default function HomeKidsScreen({ navigation }: Props) {
-  const { usuarioAtual, registrarLocalizacao } = useApp();
+  const { usuarioAtual, registrarLocalizacao, sair } = useApp();
+
+  const confirmarSair = () => {
+    Alert.alert("Sair da conta", "Deseja realmente sair?", [
+      { text: "Cancelar", style: "cancel" },
+      { text: "Sair", style: "destructive", onPress: () => { sair(); navigation.reset({ index: 0, routes: [{ name: "Inicial" }] }); } },
+    ]);
+  };
 
   // Compartilha a localização da criança uma vez ao abrir (melhor esforço):
   // o responsável passa a ver onde ela está. Falhas são ignoradas.
@@ -29,6 +36,11 @@ export default function HomeKidsScreen({ navigation }: Props) {
 
   return (
     <KidsShell navigation={navigation}>
+      <View style={styles.topRow}>
+        <Pressable style={({ pressed }) => [styles.sair, pressed && { transform: [{ scale: 0.95 }] }]} onPress={confirmarSair}>
+          <Text style={styles.sairTxt}>🚪 Sair</Text>
+        </Pressable>
+      </View>
       <View style={styles.grid}>
         {CARDS_KIDS.map((c) => (
           <Pressable
@@ -46,6 +58,9 @@ export default function HomeKidsScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
+  topRow: { flexDirection: "row", justifyContent: "flex-end", marginTop: 2, marginBottom: 2 },
+  sair: { flexDirection: "row", alignItems: "center", backgroundColor: colors.white, borderWidth: 2, borderColor: colors.ink, borderRadius: 20, paddingVertical: 6, paddingHorizontal: 14 },
+  sairTxt: { fontFamily: fonts.quicksandBold, fontSize: 14, color: colors.ink },
   grid: { flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 18, marginTop: 8 },
   card: {
     width: "47.5%", aspectRatio: 1 / 0.92, borderRadius: 15, borderWidth: 3, borderColor: colors.ink,

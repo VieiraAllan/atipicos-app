@@ -17,6 +17,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "HomeResponsavel">;
 export function navPais(navigation: any, ativo: string) {
   return [
     { icon: "home" as const, ativo: ativo === "home", onPress: () => navigation.navigate("HomeResponsavel") },
+    { icon: "alert-triangle" as const, ativo: ativo === "alertas", onPress: () => navigation.navigate("PaisAlertas") },
     { icon: "bar-chart-2" as const, ativo: ativo === "rel", onPress: () => navigation.navigate("PaisRelatorios") },
     { icon: "settings" as const, ativo: ativo === "cfg", onPress: () => navigation.navigate("PaisConfig") },
   ];
@@ -42,7 +43,6 @@ export default function HomeResponsavelScreen({ navigation }: Props) {
       onSair={logout}
       onSino={() => navigation.navigate("PaisNoticias")}
       navItens={navPais(navigation, "home")}
-      onSOS={() => navigation.navigate("SOS")}
     >
       {criancas.length === 0 ? (
         <View style={styles.vazio}>

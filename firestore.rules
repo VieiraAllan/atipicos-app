@@ -56,6 +56,16 @@ service cloud.firestore {
       );
     }
 
+    // Alertas de emergência (SOS) — a criança cria; responsável e terapeuta leem.
+    // Guarda responsavelUid/terapeutaId denormalizados para a consulta do histórico.
+    match /alertas/{id} {
+      allow read: if logado() && (
+        eu() == resource.data.responsavelUid ||
+        eu() == resource.data.terapeutaId
+      );
+      allow create: if logado();
+    }
+
     // Bloqueia qualquer outro caminho por padrão.
     match /{document=**} {
       allow read, write: if false;

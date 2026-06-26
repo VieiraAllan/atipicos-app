@@ -6,13 +6,14 @@
 // ──────────────────────────────────────────────────────────────────
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AppCtx, Crianca, Localizacao, Stats, Tarefa, Usuario, LOC_PADRAO } from "./types";
+import { AppCtx, Crianca, Localizacao, Stats, Tarefa, Usuario, LOC_PADRAO, Alerta, AlertaView } from "./types";
 
 type State = {
   usuarios: Usuario[];
   criancas: Crianca[];
   tarefas: Tarefa[];
   localizacoes: Record<string, Localizacao>;
+  alertas: Alerta[];
   sessaoUid: string | null;
 };
 
@@ -27,6 +28,7 @@ const SEED: State = {
   criancas: [],
   tarefas: [],
   localizacoes: {},
+  alertas: [],
   sessaoUid: null,
 };
 
@@ -45,6 +47,7 @@ export function useLocalStore(): AppCtx {
             ...salvo,
             usuarios: temSeed ? salvo.usuarios : [...SEED.usuarios, ...salvo.usuarios],
             localizacoes: salvo.localizacoes ?? {},
+            alertas: salvo.alertas ?? [],
             sessaoUid: null,
           });
         }
@@ -170,6 +173,28 @@ export function useLocalStore(): AppCtx {
 
   const localizacaoDaCrianca = (criancaId: string) => state.localizacoes[criancaId];
 
+  const registrarAlertaSOS: AppCtx["registrarAlertaSOS"] = (criancaId, lat, lng) =>
+    setState((s) => {
+      const ult = s.localizacoes[criancaId];
+      const novo: Alerta = {
+        id: uid(),
+        criancaId,
+        lat: lat ?? ult?.lat ?? LOC_PADRAO.lat,
+        lng: lng ?? ult?.lng ?? LOC_PADRAO.lng,
+        ts: Date.now(),
+      };
+      return { ...s, alertas: [...s.alertas, novo] };
+    });
+
+  const alertasDoResponsavel = (): AlertaView[] => {
+    const meus = state.criancas.filter((c) => c.responsavelUid === state.sessaoUid);
+    const porId = new Map(meus.map((c) => [c.id, c.nome]));
+    return state.alertas
+      .filter((a) => porId.has(a.criancaId))
+      .sort((a, b) => b.ts - a.ts)
+      .map((a) => ({ id: a.id, criancaNome: porId.get(a.criancaId) ?? "Criança", lat: a.lat, lng: a.lng, ts: a.ts }));
+  };
+
   return {
     pronto, modo: "local", usuarioAtual,
     registrar, entrar, sair,
@@ -179,5 +204,6 @@ export function useLocalStore(): AppCtx {
     tarefasDaCrianca, adicionarTarefa, alternarTarefa, removerTarefa,
     avaliarCrianca, statsDaCrianca,
     registrarLocalizacao, localizacaoDaCrianca,
+    registrarAlertaSOS, alertasDoResponsavel,
   };
 }

@@ -37,7 +37,6 @@ export default function PaisNoticiasScreen({ navigation }: Props) {
       nome={usuarioAtual?.nome ?? "Responsável"}
       onSair={() => { sair(); navigation.reset({ index: 0, routes: [{ name: "Inicial" }] }); }}
       navItens={navPais(navigation, "home")}
-      onSOS={() => navigation.navigate("SOS")}
     >
       <BackChip onBack={() => navigation.goBack()} titulo="Informações sobre TEA" />
 

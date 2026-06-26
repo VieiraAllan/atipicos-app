@@ -15,6 +15,7 @@ export type RootStackParamList = {
   MinhaConta: undefined;
   TrocarSenha: undefined;
   ConfigNotificacoes: undefined;
+  Sobre: { area: "pais" | "terapeuta" };
 
   // ── Áreas internas — Kids ──
   HomeKids: undefined;
@@ -35,6 +36,7 @@ export type RootStackParamList = {
   PaisRelatorios: { criancaId?: string } | undefined;
   PaisLocalizacao: undefined;
   PaisNoticias: undefined;
+  PaisAlertas: undefined;
   PaisConfig: undefined;
 
   // ── Áreas internas — Terapeuta ──

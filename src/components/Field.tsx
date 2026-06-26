@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, StyleSheet } from "react-native";
+import { View, TextInput, Pressable, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { colors } from "@/theme/colors";
 import { fonts } from "@/theme/typography";
@@ -14,6 +14,7 @@ type Props = {
 
 export default function Field({ config, value, onChange }: Props) {
   const [focused, setFocused] = useState(false);
+  const [verSenha, setVerSenha] = useState(false);
 
   const handleChange = (raw: string) => {
     onChange(config.mascara ? MASCARAS[config.mascara](raw) : raw);
@@ -28,12 +29,21 @@ export default function Field({ config, value, onChange }: Props) {
         onChangeText={handleChange}
         placeholder={config.placeholder}
         placeholderTextColor={colors.placeholder}
-        secureTextEntry={config.secure}
+        secureTextEntry={config.secure && !verSenha}
         keyboardType={config.keyboard ?? "default"}
         autoCapitalize={config.autoCapitalize ?? "sentences"}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
       />
+      {config.secure && (
+        <Pressable
+          onPress={() => setVerSenha((v) => !v)}
+          hitSlop={8}
+          accessibilityLabel={verSenha ? "Ocultar senha" : "Mostrar senha"}
+        >
+          <Feather name={verSenha ? "eye-off" : "eye"} size={19} color={colors.text} />
+        </Pressable>
+      )}
     </View>
   );
 }

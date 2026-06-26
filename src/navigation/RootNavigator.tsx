@@ -17,6 +17,7 @@ import SucessoScreen from "@/screens/SucessoScreen";
 import MinhaContaScreen from "@/screens/internas/MinhaContaScreen";
 import TrocarSenhaScreen from "@/screens/internas/TrocarSenhaScreen";
 import ConfigNotificacoesScreen from "@/screens/internas/ConfigNotificacoesScreen";
+import SobreScreen from "@/screens/internas/SobreScreen";
 
 // Área Kids
 import HomeKidsScreen from "@/screens/kids/HomeKidsScreen";
@@ -35,6 +36,7 @@ import PaisControleScreen from "@/screens/pais/PaisControleScreen";
 import PaisRelatoriosScreen from "@/screens/pais/PaisRelatoriosScreen";
 import PaisLocalizacaoScreen from "@/screens/pais/PaisLocalizacaoScreen";
 import PaisNoticiasScreen from "@/screens/pais/PaisNoticiasScreen";
+import PaisAlertasScreen from "@/screens/pais/PaisAlertasScreen";
 import PaisConfigScreen from "@/screens/pais/PaisConfigScreen";
 
 // Área Terapeuta
@@ -67,6 +69,7 @@ export default function RootNavigator() {
       <Stack.Screen name="MinhaConta" component={MinhaContaScreen} />
       <Stack.Screen name="TrocarSenha" component={TrocarSenhaScreen} />
       <Stack.Screen name="ConfigNotificacoes" component={ConfigNotificacoesScreen} />
+      <Stack.Screen name="Sobre" component={SobreScreen} />
 
       {/* Kids */}
       <Stack.Screen name="HomeKids" component={HomeKidsScreen} options={{ animation: "fade", gestureEnabled: false }} />
@@ -87,6 +90,7 @@ export default function RootNavigator() {
       <Stack.Screen name="PaisRelatorios" component={PaisRelatoriosScreen} />
       <Stack.Screen name="PaisLocalizacao" component={PaisLocalizacaoScreen} />
       <Stack.Screen name="PaisNoticias" component={PaisNoticiasScreen} />
+      <Stack.Screen name="PaisAlertas" component={PaisAlertasScreen} />
       <Stack.Screen name="PaisConfig" component={PaisConfigScreen} />
 
       {/* Terapeuta */}
